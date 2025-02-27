@@ -13,8 +13,8 @@ def load_image(image_path):
     if image is None:
         raise ValueError(f"Image not found: {image_path}")
     hsv_image = cv.cvtColor(image, cv.COLOR_BGR2HSV)
-    hue_channel = hsv_image[:, :, :] 
-    return hue_channel
+    color_channel = hsv_image[:, :, :] 
+    return color_channel
 
 # Convert to histogram
 def extract_hsv_histogram(image, bins=90):
@@ -67,19 +67,21 @@ for i in range(1,100,2):
     
 # # Test on a new image
 # new_image = load_image("{}/max-walter-svanberg_portratt-av-en-stjarna-iii.jpg".format(image_paths["surrealism"]))
-new_image = load_image("{}/Arkadiusz_Dzielawski_Pegasus.jpg".format(image_paths["surrealism"]))
+# new_image = load_image("{}/Arkadiusz_Dzielawski_Pegasus.jpg".format(image_paths["surrealism"]))
 # new_image = load_image("{}/craig-mullins_untitled-14.jpg".format(image_paths["realism"]))
-# new_image = load_image("{}/dobri-dobrev_marketplace-1932.jpg".format(image_paths["realism"]))
+new_image = load_image("{}/dobri-dobrev_marketplace-1932.jpg".format(image_paths["realism"]))
 new_features = [extract_hsv_histogram(new_image)]
-new_features = scaler.transform(new_features)
-prediction = knnPredict.predict(new_features)
-print(f"Predicted Art Style: {prediction[0]}")
 
-# Plot an example Hue Histogram
 plt.figure(figsize=(8, 4))
 plt.bar(range(len(new_features[0])), new_features[0].flatten(), color='blue')
 plt.axvline(x=255, color='red', linestyle='--', linewidth=2)
 plt.xlabel("Saturation/Value Bin")
 plt.ylabel("Frequency")
 plt.title("Time Series Histogram")
+
+new_features = scaler.transform(new_features)
+prediction = knnPredict.predict(new_features)
+print(f"Predicted Art Style: {prediction[0]}")
+
+# Plot an example Hue Histogram
 plt.show()
